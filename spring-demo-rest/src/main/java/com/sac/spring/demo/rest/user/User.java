@@ -6,12 +6,16 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 //@ApiModel(description="All details about the user.")
 @Entity
+@NamedQuery(name = "User.findByEmailAddress",
+	query = "select u from User u where u.email = ?1")
 public class User {
 
 	@Id
@@ -22,6 +26,9 @@ public class User {
 	//@ApiModelProperty(notes="Name should have atleast 2 characters")
 	private String name;
 
+	@Email
+	private String email;
+	
 	@Past
 	//@ApiModelProperty(notes="Birth date should be in the past")
 	private Date birthDate;
@@ -33,10 +40,11 @@ public class User {
 
 	}
 
-	public User(Integer id, String name, Date birthDate) {
+	public User(Integer id, String name, String email, Date birthDate) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.email = email;
 		this.birthDate = birthDate;
 	}
 
@@ -54,6 +62,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Date getBirthDate() {

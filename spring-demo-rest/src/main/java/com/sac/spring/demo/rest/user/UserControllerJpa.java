@@ -55,6 +55,44 @@ public class UserControllerJpa {
 		return resource;
 	}
 
+	@GetMapping("/jpa/users/email/{email}")
+	public EntityModel<User> retrieveUserByEmail(@PathVariable String email) {
+		// uses named query
+		User user = userRepository.findByEmailAddress(email);
+
+		if (user == null)
+			throw new UserNotFoundException("email: " + email);
+
+		EntityModel<User> resource = EntityModel.of(user);//new EntityModel<User>(user.get());
+
+		return resource;
+	}
+	
+	@GetMapping("/jpa/users/email2/{email}")
+	public User retrieveUserByEmail2(@PathVariable String email) {
+		// uses named query
+		User user = userRepository.findByEmailAddress2(email);
+
+		if (user == null)
+			throw new UserNotFoundException("email: " + email);
+
+		return user;
+	}
+	
+	@GetMapping("/jpa/users/name/{name}/email/{email}")
+	public EntityModel<User> retrieveUser(@PathVariable String name, @PathVariable String email) {
+		
+		// uses auto generated query
+		List<User> user = userRepository.findByEmailAndName(email, name);
+
+		if (user.isEmpty())
+			throw new UserNotFoundException("name: " + name);
+
+		EntityModel<User> resource = EntityModel.of(user.get(0));//new EntityModel<User>(user.get());
+
+		return resource;
+	}
+	
 	@DeleteMapping("/jpa/users/{id}")
 	public void deleteUser(@PathVariable int id) {
 		userRepository.deleteById(id);
